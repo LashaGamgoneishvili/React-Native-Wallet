@@ -7,6 +7,7 @@ import { COLORS } from "@/constants/colors";
 import { Ionicons } from "@expo/vector-icons";
 import { Image } from "expo-image";
 import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { ErrorInterface } from "@/types/types";
 
 export default function SignUpScreen() {
   const { isLoaded, signUp, setActive } = useSignUp();
@@ -35,10 +36,19 @@ export default function SignUpScreen() {
       // Set 'pendingVerification' to true to display second form
       // and capture OTP code
       setPendingVerification(true);
-    } catch (err) {
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
+    } catch (err: unknown) {
+      const error = err as ErrorInterface;
+      if (error.errors?.[0].code === "form_identifier_exists") {
+        setError("That email address is taken. Please try another.");
+      }
+      if (
+        error.errors?.[0].longMessage ===
+        "Passwords must be 8 characters or more."
+      ) {
+        setError("Passwords must be 8 characters or more.");
+      } else {
+        setError("An error occurred. please try again.");
+      }
     }
   };
 
