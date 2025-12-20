@@ -1,0 +1,86 @@
+import { useCallback, useState } from "react";
+import { Alert } from "react-native";
+
+export const API_URL = `https://react-native-wallet-backend-v5o1.onrender.com/api`;
+
+export const useTransactions = (userId: string | number) => {
+  const [transactions, setTransactions] = useState([]);
+  const [summary, setSummary] = useState({
+    balance: 0,
+    income: 0,
+    expenses: 0,
+  });
+  const [isLoading, setIsLoading] = useState(true);
+
+  const fetchTransactions = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/transactions/${userId}`);
+
+      console.log("response", response);
+
+      if (!response.ok) {
+        throw new Error("Response isn't ok");
+      }
+
+      const data = await response.json();
+      console.log({ data });
+
+      if (data) {
+        setTransactions(data);
+      }
+    } catch (error) {
+      console.error("Error fetching transaction", error);
+    }
+  }, [userId]);
+
+  const fetchSummary = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/summary/${userId}`);
+
+      if (!response.ok) {
+        throw new Error("Fetching summary isn't ok");
+      }
+      const data = await response.json();
+      setSummary(data);
+    } catch (error) {
+      console.error("Error fetching summary", error);
+    }
+  }, [userId]);
+
+  const loadData = useCallback(async () => {
+    console.log("userId in loadData", userId);
+    if (!userId) return;
+    setIsLoading(true);
+    console.log(isLoading);
+    try {
+      await Promise.all([fetchTransactions(), fetchSummary()]);
+    } catch (error) {
+      console.error("Error loading data: ", error);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [fetchTransactions, fetchSummary, userId]);
+
+  const deleteTransaction = async (id: string | number) => {
+    try {
+      const response = await fetch(`${API_URL}/transaction/${id}`, {
+        method: "DELETE",
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete transaction");
+      }
+
+      loadData();
+      Alert.alert("Success", "Transaction deleted successfully");
+    } catch (error) {
+      console.error("Error deleting transaction", error);
+      Alert.alert(
+        "Error",
+        error instanceof Error ? error.message : "Unknown error"
+      );
+    }
+  };
+
+  return { transactions, summary, isLoading, loadData, deleteTransaction };
+};
