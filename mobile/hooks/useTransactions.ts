@@ -3,7 +3,7 @@ import { Alert } from "react-native";
 
 export const API_URL = `https://react-native-wallet-backend-v5o1.onrender.com/api`;
 
-export const useTransactions = (userId: string | number) => {
+export const useTransactions = (userId: string) => {
   const [transactions, setTransactions] = useState([]);
   const [summary, setSummary] = useState({
     balance: 0,
@@ -15,19 +15,8 @@ export const useTransactions = (userId: string | number) => {
   const fetchTransactions = useCallback(async () => {
     try {
       const response = await fetch(`${API_URL}/transactions/${userId}`);
-
-      console.log("response", response);
-
-      if (!response.ok) {
-        throw new Error("Response isn't ok");
-      }
-
       const data = await response.json();
-      console.log({ data });
-
-      if (data) {
-        setTransactions(data);
-      }
+      setTransactions(data);
     } catch (error) {
       console.error("Error fetching transaction", error);
     }
@@ -35,12 +24,9 @@ export const useTransactions = (userId: string | number) => {
 
   const fetchSummary = useCallback(async () => {
     try {
-      const response = await fetch(`${API_URL}/summary/${userId}`);
-
-      if (!response.ok) {
-        throw new Error("Fetching summary isn't ok");
-      }
+      const response = await fetch(`${API_URL}/transactions/summary/${userId}`);
       const data = await response.json();
+      console.log({ data });
       setSummary(data);
     } catch (error) {
       console.error("Error fetching summary", error);
@@ -48,10 +34,8 @@ export const useTransactions = (userId: string | number) => {
   }, [userId]);
 
   const loadData = useCallback(async () => {
-    console.log("userId in loadData", userId);
     if (!userId) return;
     setIsLoading(true);
-    console.log(isLoading);
     try {
       await Promise.all([fetchTransactions(), fetchSummary()]);
     } catch (error) {
@@ -71,6 +55,7 @@ export const useTransactions = (userId: string | number) => {
         throw new Error("Failed to delete transaction");
       }
 
+      // Refresh data after deletion
       loadData();
       Alert.alert("Success", "Transaction deleted successfully");
     } catch (error) {

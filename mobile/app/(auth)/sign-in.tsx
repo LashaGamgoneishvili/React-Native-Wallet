@@ -26,9 +26,6 @@ export default function Page() {
         identifier: emailAddress,
         password,
       });
-
-      console.log("signInAttempt", signInAttempt);
-
       // If sign-in process is complete, set the created session as active
       // and redirect the user
       if (signInAttempt.status === "complete") {
