@@ -13,6 +13,7 @@
     "expo-env.d.ts",
     "assets/styles/create.styles.ts",
     "assets/styles/auth.styles.ts",
-    "assets/styles/home.styles.ts"
+    "assets/styles/home.styles.ts",
+    "components/TransactionItem.tsx"
   ]
 }

@@ -1,10 +1,11 @@
+import { TransactionItemModel } from "@/types/transactions";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
 
 export const API_URL = `https://react-native-wallet-backend-v5o1.onrender.com/api`;
 
 export const useTransactions = (userId: string) => {
-  const [transactions, setTransactions] = useState([]);
+  const [transactions, setTransactions] = useState<TransactionItemModel[]>([]);
   const [summary, setSummary] = useState({
     balance: 0,
     income: 0,
@@ -26,7 +27,6 @@ export const useTransactions = (userId: string) => {
     try {
       const response = await fetch(`${API_URL}/transactions/summary/${userId}`);
       const data = await response.json();
-      console.log({ data });
       setSummary(data);
     } catch (error) {
       console.error("Error fetching summary", error);
@@ -47,14 +47,13 @@ export const useTransactions = (userId: string) => {
 
   const deleteTransaction = async (id: string | number) => {
     try {
-      const response = await fetch(`${API_URL}/transaction/${id}`, {
+      const response = await fetch(`${API_URL}/transactions/${id}`, {
         method: "DELETE",
       });
 
       if (!response.ok) {
         throw new Error("Failed to delete transaction");
       }
-
       // Refresh data after deletion
       loadData();
       Alert.alert("Success", "Transaction deleted successfully");

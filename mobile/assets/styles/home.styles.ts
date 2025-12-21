@@ -123,7 +123,7 @@ export const styles = StyleSheet.create({
     marginBottom: 4,
   },
   balanceStatAmount: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "600",
   },
   sectionTitle: {
@@ -172,7 +172,7 @@ export const styles = StyleSheet.create({
     marginBottom: 4,
   },
   transactionCategory: {
-    fontSize: 14,
+    fontSize: 12,
     color: COLORS.textLight,
   },
   transactionRight: {
