@@ -5,16 +5,16 @@ export async function getTransactionByUserId(req: Request, res: Response) {
   try {
     const { userId } = req.params;
 
-    const id = Number(userId);
-    if (!Number.isFinite(id)) {
-      res.status(400).json({ message: "Invalid userId" });
-      return;
-    }
+    // const id = Number(userId);
+    // if (!Number.isFinite(id)) {
+    //   res.status(400).json({ message: "Invalid userId" });
+    //   return;
+    // }
 
     const transactions = await sql`
       SELECT *
       FROM transactions
-      WHERE user_id = ${id}
+      WHERE user_id = ${userId}
       ORDER BY created_at DESC
     `;
 
@@ -86,7 +86,7 @@ export async function getSummeryByUSerId(req: Request, res: Response) {
     const expenses =
       await sql`SELECT COALESCE(SUM(amount)) as expenses FROM transactions WHERE user_id = ${userId} AND  amount < 0 `;
 
-    console.log(balanceResult);
+    console.log({ balanceResult });
 
     res.status(200).json({
       balance: balanceResult[0].balance,
