@@ -38,7 +38,6 @@ export default function Page() {
   }, []);
 
   const handleDelete = (id: number) => {
-    console.log("handleDelete");
     Alert.alert(
       "Delete Transaction",
       "Are you sure you want to delete this transaction",
@@ -77,7 +76,7 @@ export default function Page() {
           <View style={styles.headerRight}>
             <TouchableOpacity
               style={styles.addButton}
-              onPress={() => router.push("/")}
+              onPress={() => router.push("/create")}
             >
               <Ionicons name="add" size={20} color="#fff" />
               <Text style={styles.addButtonText}>Add</Text>

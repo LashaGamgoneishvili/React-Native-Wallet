@@ -26,7 +26,6 @@ export const TransactionItem: FC<TransactionItemProps> = memo(
     const iconName: IoniconName =
       CATEGORY_ICONS[item.category] || "pricetag-outline";
 
-    console.log("item-item", item);
     return (
       <View style={styles.transactionCard} key={item.id}>
         <TouchableOpacity style={styles.transactionContent}>

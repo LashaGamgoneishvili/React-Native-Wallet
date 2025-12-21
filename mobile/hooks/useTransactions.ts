@@ -1,8 +1,7 @@
+import { API_URL } from "@/constants/api";
 import { TransactionItemModel } from "@/types/transactions";
 import { useCallback, useState } from "react";
 import { Alert } from "react-native";
-
-export const API_URL = `https://react-native-wallet-backend-v5o1.onrender.com/api`;
 
 export const useTransactions = (userId: string) => {
   const [transactions, setTransactions] = useState<TransactionItemModel[]>([]);
